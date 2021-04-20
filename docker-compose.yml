@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+    sqlite3:
+        image: nouchka/sqlite3:latest
+        stdin_open: true
+        tty: true
+        volumes:
+            - ./db/:/root/db/
+    #PHP Service
+    app:
+        build:
+        context: .
+        dockerfile: Dockerfile
+        image: digitalocean.com/php
+        container_name: app
+        restart: unless-stopped
+        tty: true
+        environment:
+        SERVICE_NAME: app
+        SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+        - app-network
+
+    #Nginx Service
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ./:/var/www
+            - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+            - ./db/:/my/sqlite/path/ # Here is the change
+        ports:
+        - "80:80"
+        networks:
+        - app-network
+
+    #Docker Networks
+    networks:
+    app-network:
+        driver: bridge
