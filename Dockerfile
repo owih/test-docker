@@ -59,6 +59,7 @@ RUN yarn
 RUN yarn add vue
 RUN yarn add vue-template-compiler vue-loader@^15.9.5 --save-dev --legacy-peer-deps
 RUN composer install
+RUN php artisan key:generate
 # Change current user to www
 USER www
 
