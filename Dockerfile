@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
 # Copy composer.lock and composer.json
 COPY composer.lock composer.json /var/www/
@@ -18,14 +18,29 @@ RUN apt-get update && apt-get install -y \
     vim \
     unzip \
     git \
-    curl
+    curl \
+    sqlite3 \
+    sqlite \
+    libsqlite3-dev \
+    libonig-dev \
+    libpq-dev \
+    libzip-dev \
+    gnupg \
+    gnupg2 \
+    gnupg1
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y yarn
+RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
-RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install pdo_sqlite
 # Install composer
@@ -40,7 +55,10 @@ COPY . /var/www
 
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www
-
+RUN yarn
+RUN yarn add vue
+RUN yarn add vue-template-compiler vue-loader@^15.9.5 --save-dev --legacy-peer-deps
+RUN composer install
 # Change current user to www
 USER www
 
