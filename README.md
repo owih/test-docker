@@ -4,6 +4,9 @@
 
 -   Устанавливаем Docker c [официального сайта](https://www.docker.com/products/docker-desktop) и [Docker Compose](https://docs.docker.com/compose/install/)
 -   Собираем контейнер командой в папке проекта `docker-compose up -d`
+-   Инициализируем сервер
+    -   при запущенном контейнере в папке проекта запускаем команду `docker-compose exec app bash`
+    -   запускаем сборку `bash ./init.sh`
 
 ## Сборка демо проекта
 
