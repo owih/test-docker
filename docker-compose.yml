@@ -7,7 +7,7 @@ services:
         tty: true
         volumes:
             - ./db/:/root/db/
-    #PHP Service
+    # PHP Service
     app:
         build:
             context: .
@@ -23,7 +23,7 @@ services:
         networks:
             - app-network
 
-    #Nginx Service
+    # Nginx Service
     webserver:
         image: nginx:alpine
         container_name: webserver
@@ -37,7 +37,7 @@ services:
         networks:
             - app-network
 
-#Docker Networks
+# Docker Networks
 networks:
     app-network:
         driver: bridge
