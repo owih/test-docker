@@ -20,6 +20,9 @@ services:
         volumes:
             - ./:/var/www
             - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        ports:
+            - "9000:9000"
+            - "3000:3000"
         networks:
             - app-network
 
@@ -34,6 +37,7 @@ services:
             - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
         ports:
             - "80:80"
+            - "8080:8080"
         networks:
             - app-network
 
