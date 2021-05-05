@@ -10,6 +10,15 @@ class CommentController extends Controller
     public function index()
     {
         $products = Comment::all()->toArray();
+        $products = array_map(
+            function ($item) {
+                return [
+                    'name' => $item->name,
+                    'text' => $item->text,
+                    'date' => $item->date,
+                ];
+            },
+            $products);
         return array_reverse($products);
     }
 
