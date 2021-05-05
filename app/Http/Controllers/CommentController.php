@@ -13,9 +13,10 @@ class CommentController extends Controller
         $products = array_map(
             function ($item) {
                 return [
-                    'name' => $item->name,
-                    'text' => $item->text,
-                    'date' => $item->date,
+                    'id' => $item['id'],
+                    'name' => $item['name'],
+                    'text' => $item['text'],
+                    'date' => $item['date'],
                 ];
             },
             $products);
@@ -32,7 +33,12 @@ class CommentController extends Controller
         ]);
         $product->save();
 
-        return response()->json('Product created!');
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name,
+            'text' => $product->text,
+            'date' => $product->date
+        ]);
     }
 
     public function show($id)
