@@ -9,7 +9,7 @@ WORKDIR /var/www
 # Install dependencies
 RUN echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";" | cat > /etc/apt/apt.conf.d/10no--check-valid-until
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get -y upgrade && apt-get install -y \
     build-essential \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     sqlite3 \
-    sqlite \
+#    sqlite \
     libsqlite3-dev \
     libonig-dev \
     libpq-dev \
@@ -30,11 +30,12 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     gnupg2 \
     gnupg1
-
+RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y yarn
-RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 
