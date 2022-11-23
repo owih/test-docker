@@ -13,3 +13,11 @@ export default {
     }
 };
 </script>
+<style lang="scss">
+#app {
+    font-size: 18px;
+    * {
+        box-sizing: border-box;
+    }
+}
+</style>

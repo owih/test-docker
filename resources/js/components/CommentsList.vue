@@ -1,23 +1,28 @@
 <template>
     <div class="comments-list">
-        <div v-if="getComments.length" class="comments-list__wrapper">
-            <div class="comments-list__row" v-for="comment in getComments" :key="comment.id">
-                <div class="comments-list__col">
+        <div v-if="getLoading" class="comments-list__loading">
+            <LoadingSpinner />
+        </div>
+        <div v-else-if="getFiltered.length" class="comments-list__wrapper">
+            <div class="comments-list__row">
+                <div class="comments-list__col" v-for="comment in getFiltered" :key="comment.id">
                     <CommentItem :comment="comment" />
                 </div>
             </div>
         </div>
-        <div v-else-if="getLoading" class="comments-list__loading">
-            <div class="comments-list__spinner"></div>
-        </div>
         <div v-else class="comments-list__warning">
-            Комментариев нет
+            На странице нет комментариев
+        </div>
+        <div v-if="!getLoading && getComments.length" class="comments-list__pagination">
+            <PaginationVue :count="getComments.length"/>
         </div>
     </div>
 </template>
 
 <script>
 import CommentItem from "./CommentItem";
+import LoadingSpinner from "./LoadingSpinner";
+import PaginationVue from "./PaginationVue";
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -25,30 +30,41 @@ export default {
     data() {
         return {
             comments: [],
+            page: this.$route.query.page || 1,
         }
     },
     components: {
-        CommentItem
+        CommentItem,
+        LoadingSpinner,
+        PaginationVue
     },
     computed: {
         ...mapGetters([
-            'getComments', 'getLoading',
+            'getFiltered',
+            'getComments',
+            'getLoading',
         ]),
+        fetchedComments() {
+            return this.getComments
+        }
+    },
+    watch: {
+        fetchedComments() { this.filterArray() }
     },
     methods: {
-      ...mapActions([
-          "fetchComments",
-      ])
+          ...mapActions([
+              "fetchComments",
+              "setPage",
+              'filterArray'
+          ]),
     },
-    // watch: {
-    //   getComments: (val) => {
-    //       console.log(val)
-    //       this.comments = val;
-    //   },
-    // },
     mounted() {
         this.fetchComments();
-    }
+        this.setPage({ page: this.$route.query.page || 1 })
+        this.$watch('$route.query', (query) => {
+            this.setPage({ page: query.page })
+        })
+    },
 }
 </script>
 
@@ -57,29 +73,13 @@ export default {
     &__loading {
         text-align: center;
     }
-    &__spinner {
-        display: inline-block;
-        width: 80px;
-        height: 80px;
-        &:after {
-            content: " ";
-            display: block;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border-radius: 50%;
-            border: 6px solid #000;
-            border-color: #000 transparent #000 transparent;
-            animation: lds-dual-ring 1.2s linear infinite;
+    &__col {
+        &:not(:last-child) {
+            margin-bottom: 24px;
         }
-        @keyframes lds-dual-ring {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+    }
+    &__pagination {
+        margin-top: 24px;
     }
 }
 </style>

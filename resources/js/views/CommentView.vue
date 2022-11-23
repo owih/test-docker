@@ -1,24 +1,17 @@
 <template>
-    <DefaultLayout>
-        <div class="center">
-            <CommentsList />
-        </div>
-    </DefaultLayout>
+    <div class="container">
+        <section class="section">
+                <CommentFull />
+        </section>
+    </div>
 </template>
 <script>
-import CommentsList from '../components/CommentsList'
-import DefaultLayout from "../layouts/DefaultLayout";
+import CommentFull from "../components/CommentFull";
 const default_layout = "default";
 
 export default {
-    data() {
-        return {
-            message:'Hello Worzxczs  ld123'
-        }
-    },
     components: {
-        CommentsList,
-        DefaultLayout,
+        CommentFull,
     }
 };
 </script>
