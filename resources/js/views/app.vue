@@ -1,18 +1,15 @@
 <template>
-    <div>
-        {{message}}
-    </div>
+    <DefaultLayout>
+        <router-view></router-view>
+    </DefaultLayout>
 </template>
 <script>
+import DefaultLayout from "../layouts/DefaultLayout";
 const default_layout = "default";
 
-
 export default {
-    computed: {},
-    data() {
-        return {
-            message:'Hello World'
-        }
+    components: {
+        DefaultLayout,
     }
 };
 </script>
